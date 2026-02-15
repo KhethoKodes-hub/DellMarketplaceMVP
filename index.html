@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dell ESD · ICT SME Marketplace (Impact MVP+)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap 5 + icons + subtle shadows -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      background: linear-gradient(145deg, #f1f5f9 0%, #eef2f6 100%);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 2rem;
+    }
+    /* smooth card hover & glassmorphism touches */
+    .card {
+      border: none;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 12px 28px -8px rgba(0,32,64,0.12), 0 4px 12px rgba(0,0,0,0.02);
+      transition: transform 0.2s ease, box-shadow 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 38px -12px rgba(0,48,96,0.2);
+      background: white;
+    }
+    .dashboard-card {
+      background: white;
+      border-radius: 30px;
+      border: 1px solid rgba(0,60,120,0.08);
+      transition: all 0.15s;
+    }
+    .badge-cat {
+      background-color: #00284d;
+      color: white;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 0.35rem 0.85rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+    }
+    .navbar-brand {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .btn-outline-light {
+      border-width: 1.5px;
+      border-radius: 40px;
+      padding: 0.3rem 1.2rem;
+    }
+    .btn-dark {
+      background: #0b2b40;
+      border: none;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: 0.15s;
+    }
+    .btn-dark:hover {
+      background: #113e5c;
+      transform: scale(0.98);
+    }
+    .btn-primary {
+      background: #0057a3;
+      border: none;
+      border-radius: 40px;
+      padding: 0.6rem;
+      font-weight: 500;
+    }
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0b2b40;
+      line-height: 1.2;
+    }
+    .stat-label {
+      color: #3f5e75;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .table thead th {
+      background-color: #e9edf2;
+      color: #113e5c;
+      font-weight: 600;
+      border-bottom: 2px solid #b6c9d6;
+    }
+    .table td {
+      background-color: white;
+      vertical-align: middle;
+    }
+    .avatar-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 20px;
+      background: #00284d;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    .input-group-custom {
+      border-radius: 60px;
+      background: white;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+    }
+    .form-control, .form-select {
+      border-radius: 50px;
+      border: 1px solid #dbe1e8;
+      padding: 0.6rem 1.2rem;
+    }
+    .form-control:focus, .form-select:focus {
+      box-shadow: 0 0 0 3px rgba(0,87,163,0.15);
+      border-color: #0057a3;
+    }
+    hr {
+      opacity: 0.25;
+    }
+    .profile-chip {
+      background: #e2eaf1;
+      border-radius: 30px;
+      padding: 0.35rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .lead-message-badge {
+      background: #f0f4fa;
+      border-radius: 16px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.8rem;
+      color: #003056;
+    }
+    .bi-chevron-right {
+      transition: 0.2s;
+    }
+  </style>
+</head>
+<body>
+
+<!-- navigation with dell-inspired palette -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: #0a1a2b;">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="bi bi-grid-3x3-gap-fill me-2" style="color: #6ab0e6;"></i>
+      Dell ESD <span style="font-weight:300;">|</span> ICT SME Marketplace
+    </a>
+    <div>
+      <button class="btn btn-outline-light me-2" onclick="showMarketplace()">
+        <i class="bi bi-shop me-1"></i>Marketplace
+      </button>
+      <button class="btn btn-outline-light" onclick="showDashboard()">
+        <i class="bi bi-bar-chart-steps me-1"></i>Impact Dashboard
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- marketplace section (SME directory) -->
+<div class="container my-4" id="marketplaceSection">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="fw-bold" style="color: #0a1a2b;"><i class="bi bi-buildings me-2"></i>ICT SME Directory</h2>
+    <span class="badge-cat"><i class="bi bi-people-fill me-1"></i> 10 verified SMEs</span>
+  </div>
+
+  <!-- search & filter row -->
+  <div class="row g-3 mb-4 align-items-center">
+    <div class="col-md-5">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0 rounded-start-5" style="border-radius: 50px 0 0 50px;">
+          <i class="bi bi-search text-secondary"></i>
+        </span>
+        <input type="text" id="searchInput" class="form-control border-start-0 rounded-end-5" placeholder="Search by name, service or category..." onkeyup="renderSMEs()">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <select id="categoryFilter" class="form-select" onchange="renderSMEs()">
+        <option value="">All categories</option>
+        <option value="Cybersecurity">🔐 Cybersecurity</option>
+        <option value="Network Cabling">🔌 Network Cabling</option>
+        <option value="AI Services">🤖 AI Services</option>
+        <option value="Cloud Solutions">☁️ Cloud Solutions</option>
+        <option value="IoT & Hardware">📡 IoT & Hardware</option>
+        <option value="Consulting">📊 IT Consulting</option>
+      </select>
+    </div>
+    <div class="col-md-3 text-md-end">
+      <span class="profile-chip"><i class="bi bi-funnel me-1"></i> <span id="resultCount">10</span> partners</span>
+    </div>
+  </div>
+
+  <!-- SME cards grid -->
+  <div class="row g-4" id="smeList"></div>
+</div>
+
+<!-- admin dashboard section (impact & leads) -->
+<div class="container my-4 d-none" id="dashboardSection">
+  <div class="d-flex align-items-center gap-3 mb-3">
+    <i class="bi bi-speedometer2 fs-1" style="color: #0a3847;"></i>
+    <h2 class="fw-bold" style="color: #0a1a2b;">Impact & Analytics Dashboard</h2>
+  </div>
+
+  <!-- KPI cards with mock numbers / dynamic update -->
+  <div class="row g-4 my-2">
+    <div class="col-md-3">
+      <div class="card dashboard-card p-4 d-flex flex-row align-items-center">
+        <div class="avatar-icon me-3" style="background: #1f516d;"><i class="bi bi-people fs-4"></i></div>
+        <div>
+          <span class="stat-label">TOTAL SMEs</span>
+          <div class="stat-number" id="totalSMEs">10</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card dashboard-card p-4 d-flex flex-row align-items-center">
+        <div class="avatar-icon me-3" style="background: #0e4b6e;"><i class="bi bi-chat-left-dots fs-4"></i></div>
+        <div>
+          <span class="stat-label">LEADS GENERATED</span>
+          <div class="stat-number" id="totalLeads">9</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card dashboard-card p-4 d-flex flex-row align-items-center">
+        <div class="avatar-icon me-3" style="background: #205b73;"><i class="bi bi-trophy fs-4"></i></div>
+        <div>
+          <span class="stat-label">TOP PERFORMER</span>
+          <div class="h5 fw-bold mt-1" id="topSME">Nexis AI</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card dashboard-card p-4 d-flex flex-row align-items-center">
+        <div class="avatar-icon me-3" style="background: #1b5a6b;"><i class="bi bi-cash-stack fs-4"></i></div>
+        <div>
+          <span class="stat-label">EST. REVENUE IMPACT</span>
+          <div class="h5 fw-bold mt-1">$2.8M <small style="font-size:0.7rem;">(Q2)</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- lead table + extra mock insight -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="d-flex align-items-center">
+        <i class="bi bi-envelope-paper fs-3 me-2"></i>
+        <h4 class="fw-semibold">Latest buyer inquiries</h4>
+        <span class="ms-auto lead-message-badge"><i class="bi bi-megaphone"></i> 9 new this month</span>
+      </div>
+      <div class="card p-3 mt-2" style="border-radius: 30px;">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr><th>SME</th><th>Company</th><th>Email</th><th>Message</th><th>Status</th></tr>
+          </thead>
+          <tbody id="leadTable"></tbody>
+        </table>
+        <div class="text-muted small mt-3 text-end"><i class="bi bi-clock-history"></i> last update: just now</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- profile modal (inquiry) with modern clean look -->
+<div class="modal fade" id="smeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 38px; border: none;">
+      <div class="modal-header border-0 pb-0" style="background: transparent;">
+        <h5 class="modal-title fw-bold" id="modalTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body pt-2">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="badge-cat" id="modalCategory"></span>
+          <span class="profile-chip"><i class="bi bi-briefcase"></i> <span id="modalLeads">0</span> previous leads</span>
+        </div>
+        <p class="text-secondary" id="modalDescription"></p>
+        <div class="bg-light p-3 rounded-4 mb-3">
+          <i class="bi bi-tools me-1"></i><strong>Core services:</strong> <span id="modalServices"></span>
+        </div>
+        <hr>
+        <h6 class="fw-bold"><i class="bi bi-send"></i> Send inquiry to this SME</h6>
+        <input type="text" id="leadCompany" class="form-control mb-2" placeholder="Your company name *">
+        <input type="email" id="leadEmail" class="form-control mb-2" placeholder="Email address *">
+        <textarea id="leadMessage" class="form-control mb-3" rows="2" placeholder="Tell them about your project..."></textarea>
+        <button class="btn btn-primary w-100 py-2" onclick="submitLead()"><i class="bi bi-envelope-arrow-up me-2"></i>Submit inquiry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS + custom script (all in one) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ---------- ENHANCED MOCK DATA (10 SMEs, richer fields) ----------
+  const smes = [
+    { id: 1, name: "SecureNet Solutions", category: "Cybersecurity", description: "Penetration testing, 24/7 SOC, and risk management for financial institutions.", services: "Pen Testing, Firewall, SOC monitoring, ISO27001 gap analysis", leads: 2, caseStudies: "Prevented $3M breach for bank", location: "Nairobi" },
+    { id: 2, name: "CableTech Installations", category: "Network Cabling", description: "Structured cabling & fiber infrastructure for enterprise campuses and data centers.", services: "LAN cabling, server rooms, fiber splicing, WiFi design", leads: 1, caseStudies: "MTN headquarters cabling", location: "Johannesburg" },
+    { id: 3, name: "AI Nexus Africa", category: "AI Services", description: "Custom generative AI, LLM chatbots, and computer vision for retail & logistics.", services: "Chatbots, document automation, demand forecasting", leads: 3, caseStudies: "Chatbot for 200k customers", location: "Cape Town" },
+    { id: 4, name: "CloudScale Systems", category: "Cloud Solutions", description: "Cloud-native consulting: AWS, Azure, Kubernetes, and FinOps.", services: "Azure migration, EKS, DevOps, cost optimisation", leads: 0, caseStudies: "40% cloud cost reduction", location: "Lagos" },
+    { id: 5, name: "IoT Dynamics", category: "IoT & Hardware", description: "Industrial IoT, asset tracking, and sensor deployment for mining/agriculture.", services: "Smart sensors, LoRaWAN, predictive maintenance", leads: 1, caseStudies: "Gold mine predictive system", location: "Accra" },
+    { id: 6, name: "Cyber Defense Africa", category: "Cybersecurity", description: "Offensive security and compliance for SME (POPIA/GDPR).", services: "Red teaming, awareness training, DLP", leads: 0, caseStudies: "Secured 5 healthcare orgs", location: "Durban" },
+    { id: 7, name: "FiberLink Pros", category: "Network Cabling", description: "FTTH, backbone cabling and wireless backhaul.", services: "Outdoor/indoor fiber, ODF, splicing", leads: 1, caseStudies: "200km rural fiber project", location: "Kigali" },
+    { id: 8, name: "Intellisys AI", category: "AI Services", description: "ML model development, computer vision, and predictive analytics.", services: "Vision inspection, predictive models, AI training", leads: 0, caseStudies: "Factory quality control AI", location: "Nairobi" },
+    { id: 9, name: "Bridge 2 Cloud", category: "Cloud Solutions", description: "Multi-cloud managed services and infrastructure-as-code.", services: "Terraform, cloud migrations, landing zones", leads: 1, caseStudies: "Migrated 500 servers", location: "Lagos" },
+    { id: 10, name: "Strat IT Consulting", category: "Consulting", description: "Strategic IT sourcing, digital transformation for public sector.", services: "IT strategy, tender support, ICT auditing", leads: 0, caseStudies: "eGov framework design", location: "Gaborone" }
+  ];
+
+  // leads array (mock + future submissions)
+  let leads = [
+    { sme: "AI Nexus Africa", company: "Barclays Kenya", email: "purchasing@barclays.co.ke", message: "Interested in chatbot for WhatsApp banking" },
+    { sme: "SecureNet Solutions", company: "Equity Group", email: "cio@equitybank.co", message: "Need full infrastructure pen test Q3" },
+    { sme: "IoT Dynamics", company: "AngloGold", email: "tech@anglogold.com", message: "Asset tracking trial for 5 trucks" },
+    { sme: "CableTech Installations", company: "Liquid Telecom", email: "projects@liquid.tech", message: "Looking for data center cabling partner" },
+    { sme: "FiberLink Pros", company: "Airtel Uganda", email: "network@airtel.ug", message: "Last-mile fiber in Kampala" },
+    { sme: "SecureNet Solutions", company: "KCB Bank", email: "security@kcbgroup.com", message: "SOC monitoring expansion" },
+    { sme: "Bridge 2 Cloud", company: "Safaricom PLC", email: "cloud@safaricom.co.ke", message: "AWS landing zone setup" },
+    { sme: "AI Nexus Africa", company: "Twiga Foods", email: "it@twigafoods.com", message: "Demand forecasting pilot" },
+    { sme: "CloudScale Systems", company: "Old Mutual", email: "infra@oldmutual.com", message: "Azure governance assessment" } 
+  ];
+
+  // update SME leads count based on mock leads (to keep sync)
+  smes.forEach(s => {
+    s.leads = leads.filter(l => l.sme === s.name).length;
+  });
+
+  let selectedSME = null;
+
+  // Render marketplace cards with icons & extra flair
+  function renderSMEs() {
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    const category = document.getElementById("categoryFilter").value;
+    const container = document.getElementById("smeList");
+    container.innerHTML = "";
+
+    const filtered = smes.filter(sme =>
+      (sme.name.toLowerCase().includes(search) ||
+       sme.services.toLowerCase().includes(search) ||
+       sme.category.toLowerCase().includes(search)) &&
+      (category === "" || sme.category === category)
+    );
+    document.getElementById("resultCount").innerText = filtered.length;
+
+    filtered.forEach(sme => {
+      // tiny random icon gradient per card
+      const iconColor = sme.category === 'Cybersecurity' ? 'danger' : sme.category.includes('AI') ? 'primary' : 'success';
+      container.innerHTML += `
+        <div class="col-md-6 col-lg-4">
+          <div class="card p-3 h-100 d-flex flex-column">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <div class="avatar-icon" style="background:#1f4b6e;"><i class="bi bi-shield-shaded fs-4"></i></div>
+              <div>
+                <h5 class="fw-bold mb-0">${sme.name}</h5>
+                <span class="badge-cat mt-1">${sme.category}</span>
+              </div>
+            </div>
+            <p class="text-secondary-emphasis small">${sme.description.substring(0,75)}…</p>
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <span class="profile-chip"><i class="bi bi-geo-alt"></i> ${sme.location}</span>
+              <span class="profile-chip"><i class="bi bi-briefcase"></i> ${sme.leads} leads</span>
+            </div>
+            <button class="btn btn-dark w-100 mt-3" onclick="openSME(${sme.id})">
+              <i class="bi bi-person-lines-fill me-2"></i>View profile & connect
+            </button>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  // open modal with SME details
+  function openSME(id) {
+    selectedSME = smes.find(s => s.id === id);
+    document.getElementById("modalTitle").innerText = selectedSME.name;
+    document.getElementById("modalCategory").innerText = selectedSME.category;
+    document.getElementById("modalLeads").innerText = selectedSME.leads;
+    document.getElementById("modalDescription").innerText = selectedSME.description;
+    document.getElementById("modalServices").innerText = selectedSME.services;
+    // clear previous fields
+    document.getElementById("leadCompany").value = "";
+    document.getElementById("leadEmail").value = "";
+    document.getElementById("leadMessage").value = "";
+    new bootstrap.Modal(document.getElementById("smeModal")).show();
+  }
+
+  // submit lead (push & update)
+  function submitLead() {
+    const company = document.getElementById("leadCompany").value.trim();
+    const email = document.getElementById("leadEmail").value.trim();
+    const message = document.getElementById("leadMessage").value.trim();
+
+    if (!company || !email || !message) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    leads.push({
+      sme: selectedSME.name,
+      company,
+      email,
+      message
+    });
+
+    selectedSME.leads++;
+    alert("✓ Inquiry submitted! The SME will reach out soon.");
+    bootstrap.Modal.getInstance(document.getElementById("smeModal")).hide();
+    renderDashboard();   // keep dashboard fresh
+    renderSMEs();        // update lead count on cards
+  }
+
+  // toggle views
+  function showMarketplace() {
+    document.getElementById("marketplaceSection").classList.remove("d-none");
+    document.getElementById("dashboardSection").classList.add("d-none");
+  }
+
+  function showDashboard() {
+    document.getElementById("marketplaceSection").classList.add("d-none");
+    document.getElementById("dashboardSection").classList.remove("d-none");
+    renderDashboard();
+  }
+
+  // render dashboard KPIs and lead table
+  function renderDashboard() {
+    const totalSMEs = smes.length;
+    const totalLeads = leads.length;
+    document.getElementById("totalSMEs").innerText = totalSMEs;
+    document.getElementById("totalLeads").innerText = totalLeads;
+
+    const top = smes.reduce((prev, current) => (prev.leads > current.leads) ? prev : current, smes[0]);
+    document.getElementById("topSME").innerHTML = `${top.name} <small style="font-size:0.7rem;">(${top.leads} leads)</small>`;
+
+    const table = document.getElementById("leadTable");
+    table.innerHTML = "";
+    leads.slice(0,8).forEach(l => {  // show latest 8 for readability
+      table.innerHTML += `
+        <tr>
+          <td><span class="fw-semibold">${l.sme}</span></td>
+          <td>${l.company}</td>
+          <td>${l.email}</td>
+          <td>${l.message.substring(0,45)}${l.message.length>45?'…':''}</td>
+          <td><span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill">new</span></td>
+        </tr>
+      `;
+    });
+  }
+
+  // initial render
+  renderSMEs();
+  // also set the table on first dashboard view (hidden now, but ok)
+  window.renderDashboard = renderDashboard;
+  window.showMarketplace = showMarketplace;
+  window.showDashboard = showDashboard;
+  window.openSME = openSME;
+  window.submitLead = submitLead;
+  window.renderSMEs = renderSMEs;
+</script>
+<!-- footer (subtle) -->
+<div class="container text-center text-muted small mt-5 pt-2">
+  <i class="bi bi-dell"></i> Dell ESD ICT SME Marketplace – MVP with enhanced mock data & modern UI
+</div>
+</body>
+</html>
