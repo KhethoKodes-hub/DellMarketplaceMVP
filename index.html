@@ -2,179 +2,338 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dell ESD · ICT SME Marketplace (Impact MVP+)</title>
+  <title>Dell ESD · ICT SME Marketplace (🌓 Dark/Light Toggle)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap 5 + icons + subtle shadows -->
+  <!-- Bootstrap 5 + icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
+    /* ----- CSS variables for light/dark ----- */
+    :root {
+      --bg-gradient-start: #0a1929;
+      --bg-gradient-end: #1d3a5c;
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255,255,255,0.2);
+      --glass-hover: rgba(255,255,255,0.25);
+      --text-primary: white;
+      --text-secondary: rgba(255,255,255,0.7);
+      --navbar-bg: rgba(10, 25, 40, 0.7);
+      --card-shadow: 0 20px 40px -12px rgba(0, 20, 40, 0.45);
+      --input-bg: rgba(255,255,255,0.1);
+      --input-border: rgba(255,255,255,0.3);
+      --table-header-bg: rgba(255,255,255,0.1);
+      --table-border: rgba(255,255,255,0.15);
+      --modal-bg: rgba(18, 35, 55, 0.7);
+    }
+
+    /* light theme overrides */
+    [data-theme="light"] {
+      --bg-gradient-start: #e4ecf7;
+      --bg-gradient-end: #d1ddec;
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(0, 40, 80, 0.15);
+      --glass-hover: rgba(255, 255, 255, 0.9);
+      --text-primary: #0a1a2b;
+      --text-secondary: #1e3b5a;
+      --navbar-bg: rgba(255, 255, 255, 0.7);
+      --card-shadow: 0 12px 32px -12px rgba(0,60,120,0.25);
+      --input-bg: rgba(255,255,255,0.8);
+      --input-border: rgba(0,40,80,0.2);
+      --table-header-bg: rgba(0,60,120,0.08);
+      --table-border: rgba(0,40,80,0.1);
+      --modal-bg: rgba(255, 255, 255, 0.85);
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: background-color 0.25s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
     body {
-      background: linear-gradient(145deg, #f1f5f9 0%, #eef2f6 100%);
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
+      background: linear-gradient(145deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       padding-bottom: 2rem;
+      backdrop-attachment: fixed;
+      color: var(--text-primary);
     }
-    /* smooth card hover & glassmorphism touches */
-    .card {
-      border: none;
-      border-radius: 28px;
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(2px);
-      box-shadow: 0 12px 28px -8px rgba(0,32,64,0.12), 0 4px 12px rgba(0,0,0,0.02);
-      transition: transform 0.2s ease, box-shadow 0.25s ease;
+
+    /* glassmorphism base */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      box-shadow: var(--card-shadow), 0 0 0 1px rgba(255,255,255,0.08) inset;
+      transition: all 0.2s ease;
+      color: var(--text-primary);
     }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 24px 38px -12px rgba(0,48,96,0.2);
-      background: white;
+
+    .glass-card:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255,255,255,0.35);
+      box-shadow: 0 28px 48px -16px rgba(0, 60, 120, 0.4);
+      transform: translateY(-6px);
     }
-    .dashboard-card {
-      background: white;
-      border-radius: 30px;
-      border: 1px solid rgba(0,60,120,0.08);
-      transition: all 0.15s;
+
+    /* navbar */
+    .navbar-glass {
+      background: var(--navbar-bg) !important;
+      backdrop-filter: blur(14px) saturate(200%);
+      border-bottom: 1px solid var(--glass-border);
     }
-    .badge-cat {
-      background-color: #00284d;
-      color: white;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      padding: 0.35rem 0.85rem;
-      border-radius: 40px;
-      font-size: 0.7rem;
-    }
+
     .navbar-brand {
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      background: linear-gradient(130deg, var(--text-primary), #8bb9ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .btn-outline-light {
-      border-width: 1.5px;
-      border-radius: 40px;
-      padding: 0.3rem 1.2rem;
-    }
-    .btn-dark {
-      background: #0b2b40;
-      border: none;
-      border-radius: 50px;
-      font-weight: 500;
+
+    /* theme toggle button */
+    .theme-toggle {
+      background: rgba(128,128,128,0.2);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 60px;
+      padding: 0.3rem 0.9rem;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
       transition: 0.15s;
     }
-    .btn-dark:hover {
-      background: #113e5c;
-      transform: scale(0.98);
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.25);
     }
-    .btn-primary {
-      background: #0057a3;
-      border: none;
+
+    .btn-glass-outline {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid var(--glass-border);
       border-radius: 40px;
-      padding: 0.6rem;
+      color: var(--text-primary);
       font-weight: 500;
+      padding: 0.4rem 1.3rem;
+      transition: 0.2s;
     }
-    .stat-number {
+
+    .btn-glass-outline:hover {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.8);
+      color: var(--text-primary);
+    }
+
+    .btn-gradient-primary {
+      background: linear-gradient(135deg, #0066cc, #004d99);
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 10px 20px -8px #001f3f;
+    }
+
+    .btn-gradient-primary:hover {
+      background: linear-gradient(135deg, #1a75d4, #005cb0);
+      color: white;
+    }
+
+    .badge-glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(4px);
+      color: var(--text-primary);
+      border-radius: 60px;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid var(--glass-border);
+    }
+
+    .category-tag {
+      background: linear-gradient(145deg, #1e4b6e, #103d5a);
+      color: white;
+      border-radius: 30px;
+      padding: 0.25rem 1.1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* light theme category tag adjustment */
+    [data-theme="light"] .category-tag {
+      background: linear-gradient(145deg, #c1d9f0, #a6c0dd);
+      color: #0a1a2b;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .dashboard-stat {
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 36px;
+      padding: 1.5rem 1.2rem;
+      transition: 0.2s;
+      color: var(--text-primary);
+    }
+
+    .dashboard-stat .stat-number {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #0b2b40;
+      background: linear-gradient(to right, var(--text-primary), #7ca5d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       line-height: 1.2;
     }
-    .stat-label {
-      color: #3f5e75;
-      font-weight: 500;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
+
+    .form-control, .form-select {
+      background: var(--input-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--input-border);
+      border-radius: 60px;
+      color: var(--text-primary);
+      padding: 0.7rem 1.2rem;
     }
-    .table thead th {
-      background-color: #e9edf2;
-      color: #113e5c;
-      font-weight: 600;
-      border-bottom: 2px solid #b6c9d6;
+
+    .form-control::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.8;
     }
-    .table td {
-      background-color: white;
-      vertical-align: middle;
+
+    .form-control:focus, .form-select:focus {
+      background: var(--glass-hover);
+      border-color: var(--glass-border);
+      box-shadow: 0 0 0 3px rgba(0,110,255,0.2);
+      color: var(--text-primary);
     }
+
+    .form-select option {
+      background: var(--bg-gradient-end);
+      color: var(--text-primary);
+    }
+
+    .glass-table {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 36px;
+      border: 1px solid var(--glass-border);
+      overflow: hidden;
+    }
+
+    .glass-table table {
+      color: var(--text-primary);
+      margin-bottom: 0;
+    }
+
+    .glass-table thead th {
+      background: var(--table-header-bg);
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    .glass-table td {
+      background: transparent;
+      border-bottom: 1px solid var(--table-border);
+      color: var(--text-secondary);
+    }
+
+    .glass-table tbody tr:hover {
+      background: var(--glass-hover);
+    }
+
+    .modal-content {
+      background: var(--modal-bg);
+      backdrop-filter: blur(28px) saturate(200%);
+      border: 1px solid var(--glass-border);
+      border-radius: 48px;
+      color: var(--text-primary);
+    }
+
+    .modal-header .btn-close {
+      filter: invert(0.8);
+      opacity: 0.8;
+    }
+
+    [data-theme="light"] .modal-header .btn-close {
+      filter: invert(0.2);
+    }
+
     .avatar-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 20px;
-      background: #00284d;
-      color: white;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(125deg, #2b6a9e, #184a72);
+      border-radius: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
     }
-    .input-group-custom {
-      border-radius: 60px;
-      background: white;
-      border: 1px solid rgba(0,0,0,0.05);
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+
+    .gradient-heading {
+      background: linear-gradient(145deg, var(--text-primary), #7ca5d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
     }
-    .form-control, .form-select {
-      border-radius: 50px;
-      border: 1px solid #dbe1e8;
-      padding: 0.6rem 1.2rem;
-    }
-    .form-control:focus, .form-select:focus {
-      box-shadow: 0 0 0 3px rgba(0,87,163,0.15);
-      border-color: #0057a3;
-    }
+
     hr {
-      opacity: 0.25;
+      opacity: 0.2;
+      background: var(--text-primary);
     }
-    .profile-chip {
-      background: #e2eaf1;
-      border-radius: 30px;
-      padding: 0.35rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-    .lead-message-badge {
-      background: #f0f4fa;
-      border-radius: 16px;
-      padding: 0.2rem 0.8rem;
-      font-size: 0.8rem;
-      color: #003056;
-    }
-    .bi-chevron-right {
-      transition: 0.2s;
+
+    .text-white-50 {
+      color: var(--text-secondary) !important;
     }
   </style>
 </head>
-<body>
+<body data-theme="dark"> <!-- default dark -->
 
-<!-- navigation with dell-inspired palette -->
-<nav class="navbar navbar-expand-lg navbar-dark" style="background: #0a1a2b;">
+<!-- glass navbar with theme toggle -->
+<nav class="navbar navbar-expand-lg navbar-glass sticky-top">
   <div class="container">
-    <a class="navbar-brand" href="#">
-      <i class="bi bi-grid-3x3-gap-fill me-2" style="color: #6ab0e6;"></i>
-      Dell ESD <span style="font-weight:300;">|</span> ICT SME Marketplace
+    <a class="navbar-brand fs-3" href="#">
+      <i class="bi bi-droplet-half me-2" style="color: #7abfff;"></i>
+      Dell ESD <span style="font-weight:300; background:none; -webkit-text-fill-color:currentColor; color:currentColor;">|</span> 
+      <span class="gradient-heading">ICT SME Marketplace</span>
     </a>
-    <div>
-      <button class="btn btn-outline-light me-2" onclick="showMarketplace()">
+    <div class="d-flex gap-2">
+      <!-- theme toggle pill -->
+      <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+        <i class="bi bi-sun-fill" id="themeIconSun" style="display: none;"></i>
+        <i class="bi bi-moon-stars-fill" id="themeIconMoon"></i>
+        <span id="themeLabel">Dark</span>
+      </div>
+      <button class="btn btn-glass-outline me-2" onclick="showMarketplace()">
         <i class="bi bi-shop me-1"></i>Marketplace
       </button>
-      <button class="btn btn-outline-light" onclick="showDashboard()">
+      <button class="btn btn-glass-outline" onclick="showDashboard()">
         <i class="bi bi-bar-chart-steps me-1"></i>Impact Dashboard
       </button>
     </div>
   </div>
 </nav>
 
-<!-- marketplace section (SME directory) -->
+<!-- marketplace section -->
 <div class="container my-4" id="marketplaceSection">
   <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="fw-bold" style="color: #0a1a2b;"><i class="bi bi-buildings me-2"></i>ICT SME Directory</h2>
-    <span class="badge-cat"><i class="bi bi-people-fill me-1"></i> 10 verified SMEs</span>
+    <h2 class="gradient-heading"><i class="bi bi-buildings me-2"></i>ICT SME Directory</h2>
+    <span class="badge-glass"><i class="bi bi-people-fill me-1"></i> 10 verified SMEs</span>
   </div>
 
   <!-- search & filter row -->
   <div class="row g-3 mb-4 align-items-center">
     <div class="col-md-5">
       <div class="input-group">
-        <span class="input-group-text bg-white border-end-0 rounded-start-5" style="border-radius: 50px 0 0 50px;">
-          <i class="bi bi-search text-secondary"></i>
+        <span class="input-group-text bg-transparent border-end-0 rounded-start-5" style="border-color:var(--glass-border); background:var(--input-bg)!important;">
+          <i class="bi bi-search" style="color:var(--text-primary);"></i>
         </span>
         <input type="text" id="searchInput" class="form-control border-start-0 rounded-end-5" placeholder="Search by name, service or category..." onkeyup="renderSMEs()">
       </div>
@@ -191,7 +350,7 @@
       </select>
     </div>
     <div class="col-md-3 text-md-end">
-      <span class="profile-chip"><i class="bi bi-funnel me-1"></i> <span id="resultCount">10</span> partners</span>
+      <span class="badge-glass"><i class="bi bi-funnel me-1"></i> <span id="resultCount">10</span> partners</span>
     </div>
   </div>
 
@@ -199,106 +358,106 @@
   <div class="row g-4" id="smeList"></div>
 </div>
 
-<!-- admin dashboard section (impact & leads) -->
+<!-- dashboard section -->
 <div class="container my-4 d-none" id="dashboardSection">
-  <div class="d-flex align-items-center gap-3 mb-3">
-    <i class="bi bi-speedometer2 fs-1" style="color: #0a3847;"></i>
-    <h2 class="fw-bold" style="color: #0a1a2b;">Impact & Analytics Dashboard</h2>
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <i class="bi bi-speedometer2 fs-1" style="color: var(--text-primary);"></i>
+    <h2 class="gradient-heading">Impact & Analytics Dashboard</h2>
   </div>
 
-  <!-- KPI cards with mock numbers / dynamic update -->
+  <!-- KPI cards -->
   <div class="row g-4 my-2">
     <div class="col-md-3">
-      <div class="card dashboard-card p-4 d-flex flex-row align-items-center">
-        <div class="avatar-icon me-3" style="background: #1f516d;"><i class="bi bi-people fs-4"></i></div>
+      <div class="dashboard-stat d-flex align-items-center">
+        <div class="avatar-icon me-3"><i class="bi bi-people fs-4"></i></div>
         <div>
-          <span class="stat-label">TOTAL SMEs</span>
+          <div class="stat-label text-white-50">TOTAL SMEs</div>
           <div class="stat-number" id="totalSMEs">10</div>
         </div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card dashboard-card p-4 d-flex flex-row align-items-center">
-        <div class="avatar-icon me-3" style="background: #0e4b6e;"><i class="bi bi-chat-left-dots fs-4"></i></div>
+      <div class="dashboard-stat d-flex align-items-center">
+        <div class="avatar-icon me-3"><i class="bi bi-chat-left-dots fs-4"></i></div>
         <div>
-          <span class="stat-label">LEADS GENERATED</span>
+          <div class="stat-label text-white-50">LEADS GENERATED</div>
           <div class="stat-number" id="totalLeads">9</div>
         </div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card dashboard-card p-4 d-flex flex-row align-items-center">
-        <div class="avatar-icon me-3" style="background: #205b73;"><i class="bi bi-trophy fs-4"></i></div>
+      <div class="dashboard-stat d-flex align-items-center">
+        <div class="avatar-icon me-3"><i class="bi bi-trophy fs-4"></i></div>
         <div>
-          <span class="stat-label">TOP PERFORMER</span>
-          <div class="h5 fw-bold mt-1" id="topSME">Nexis AI</div>
+          <div class="stat-label text-white-50">TOP PERFORMER</div>
+          <div class="h5 fw-bold mt-1 text-primary" id="topSME" style="color:var(--text-primary)!important;">AI Nexus</div>
         </div>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="card dashboard-card p-4 d-flex flex-row align-items-center">
-        <div class="avatar-icon me-3" style="background: #1b5a6b;"><i class="bi bi-cash-stack fs-4"></i></div>
+      <div class="dashboard-stat d-flex align-items-center">
+        <div class="avatar-icon me-3"><i class="bi bi-cash-stack fs-4"></i></div>
         <div>
-          <span class="stat-label">EST. REVENUE IMPACT</span>
-          <div class="h5 fw-bold mt-1">$2.8M <small style="font-size:0.7rem;">(Q2)</small></div>
+          <div class="stat-label text-white-50">EST. REVENUE IMPACT</div>
+          <div class="h5 fw-bold mt-1" style="color:var(--text-primary);">$2.8M <small style="font-size:0.7rem;">(Q2)</small></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- lead table + extra mock insight -->
+  <!-- lead table -->
   <div class="row mt-5">
     <div class="col-12">
-      <div class="d-flex align-items-center">
-        <i class="bi bi-envelope-paper fs-3 me-2"></i>
-        <h4 class="fw-semibold">Latest buyer inquiries</h4>
-        <span class="ms-auto lead-message-badge"><i class="bi bi-megaphone"></i> 9 new this month</span>
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-envelope-paper fs-3 me-2" style="color:var(--text-primary);"></i>
+        <h4 class="fw-semibold" style="color:var(--text-primary);">Latest buyer inquiries</h4>
+        <span class="ms-auto badge-glass"><i class="bi bi-megaphone"></i> 9 new this month</span>
       </div>
-      <div class="card p-3 mt-2" style="border-radius: 30px;">
-        <table class="table table-hover align-middle mb-0">
+      <div class="glass-table p-2">
+        <table class="table table-hover align-middle">
           <thead>
             <tr><th>SME</th><th>Company</th><th>Email</th><th>Message</th><th>Status</th></tr>
           </thead>
           <tbody id="leadTable"></tbody>
         </table>
-        <div class="text-muted small mt-3 text-end"><i class="bi bi-clock-history"></i> last update: just now</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- profile modal (inquiry) with modern clean look -->
+<!-- profile modal -->
 <div class="modal fade" id="smeModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius: 38px; border: none;">
-      <div class="modal-header border-0 pb-0" style="background: transparent;">
-        <h5 class="modal-title fw-bold" id="modalTitle"></h5>
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title gradient-heading" id="modalTitle"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body pt-2">
         <div class="d-flex align-items-center gap-2 mb-3">
-          <span class="badge-cat" id="modalCategory"></span>
-          <span class="profile-chip"><i class="bi bi-briefcase"></i> <span id="modalLeads">0</span> previous leads</span>
+          <span class="category-tag" id="modalCategory"></span>
+          <span class="badge-glass"><i class="bi bi-briefcase"></i> <span id="modalLeads">0</span> previous leads</span>
         </div>
-        <p class="text-secondary" id="modalDescription"></p>
-        <div class="bg-light p-3 rounded-4 mb-3">
-          <i class="bi bi-tools me-1"></i><strong>Core services:</strong> <span id="modalServices"></span>
+        <p class="text-white-50" id="modalDescription"></p>
+        <div class="bg-white-10 p-3 rounded-4 mb-3" style="background:rgba(128,128,128,0.1); border:1px solid var(--glass-border);">
+          <i class="bi bi-tools me-1"></i>
+          <strong class="text-primary" style="color:var(--text-primary)!important;">Core services:</strong> <span class="text-white-50" id="modalServices"></span>
         </div>
         <hr>
-        <h6 class="fw-bold"><i class="bi bi-send"></i> Send inquiry to this SME</h6>
+        <h6 class="fw-bold" style="color:var(--text-primary);"><i class="bi bi-send"></i> Send inquiry</h6>
         <input type="text" id="leadCompany" class="form-control mb-2" placeholder="Your company name *">
         <input type="email" id="leadEmail" class="form-control mb-2" placeholder="Email address *">
         <textarea id="leadMessage" class="form-control mb-3" rows="2" placeholder="Tell them about your project..."></textarea>
-        <button class="btn btn-primary w-100 py-2" onclick="submitLead()"><i class="bi bi-envelope-arrow-up me-2"></i>Submit inquiry</button>
+        <button class="btn btn-gradient-primary w-100 py-2" onclick="submitLead()"><i class="bi bi-envelope-arrow-up me-2"></i>Submit inquiry</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Bootstrap JS + custom script (all in one) -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // ---------- ENHANCED MOCK DATA (10 SMEs, richer fields) ----------
+  // ---------- ENHANCED MOCK DATA (10 SMEs) ----------
   const smes = [
     { id: 1, name: "SecureNet Solutions", category: "Cybersecurity", description: "Penetration testing, 24/7 SOC, and risk management for financial institutions.", services: "Pen Testing, Firewall, SOC monitoring, ISO27001 gap analysis", leads: 2, caseStudies: "Prevented $3M breach for bank", location: "Nairobi" },
     { id: 2, name: "CableTech Installations", category: "Network Cabling", description: "Structured cabling & fiber infrastructure for enterprise campuses and data centers.", services: "LAN cabling, server rooms, fiber splicing, WiFi design", leads: 1, caseStudies: "MTN headquarters cabling", location: "Johannesburg" },
@@ -312,7 +471,7 @@
     { id: 10, name: "Strat IT Consulting", category: "Consulting", description: "Strategic IT sourcing, digital transformation for public sector.", services: "IT strategy, tender support, ICT auditing", leads: 0, caseStudies: "eGov framework design", location: "Gaborone" }
   ];
 
-  // leads array (mock + future submissions)
+  // leads array (mock + future)
   let leads = [
     { sme: "AI Nexus Africa", company: "Barclays Kenya", email: "purchasing@barclays.co.ke", message: "Interested in chatbot for WhatsApp banking" },
     { sme: "SecureNet Solutions", company: "Equity Group", email: "cio@equitybank.co", message: "Need full infrastructure pen test Q3" },
@@ -325,14 +484,35 @@
     { sme: "CloudScale Systems", company: "Old Mutual", email: "infra@oldmutual.com", message: "Azure governance assessment" } 
   ];
 
-  // update SME leads count based on mock leads (to keep sync)
   smes.forEach(s => {
     s.leads = leads.filter(l => l.sme === s.name).length;
   });
 
   let selectedSME = null;
 
-  // Render marketplace cards with icons & extra flair
+  // theme toggle function
+  function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    body.setAttribute('data-theme', newTheme);
+    
+    // update toggle icon & label
+    const sunIcon = document.getElementById('themeIconSun');
+    const moonIcon = document.getElementById('themeIconMoon');
+    const label = document.getElementById('themeLabel');
+    if (newTheme === 'light') {
+      sunIcon.style.display = 'inline-block';
+      moonIcon.style.display = 'none';
+      label.innerText = 'Light';
+    } else {
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'inline-block';
+      label.innerText = 'Dark';
+    }
+  }
+
+  // Render marketplace cards
   function renderSMEs() {
     const search = document.getElementById("searchInput").value.toLowerCase();
     const category = document.getElementById("categoryFilter").value;
@@ -348,24 +528,22 @@
     document.getElementById("resultCount").innerText = filtered.length;
 
     filtered.forEach(sme => {
-      // tiny random icon gradient per card
-      const iconColor = sme.category === 'Cybersecurity' ? 'danger' : sme.category.includes('AI') ? 'primary' : 'success';
       container.innerHTML += `
         <div class="col-md-6 col-lg-4">
-          <div class="card p-3 h-100 d-flex flex-column">
+          <div class="glass-card p-3 h-100 d-flex flex-column">
             <div class="d-flex align-items-center gap-3 mb-2">
-              <div class="avatar-icon" style="background:#1f4b6e;"><i class="bi bi-shield-shaded fs-4"></i></div>
+              <div class="avatar-icon"><i class="bi bi-shield-shaded fs-4"></i></div>
               <div>
-                <h5 class="fw-bold mb-0">${sme.name}</h5>
-                <span class="badge-cat mt-1">${sme.category}</span>
+                <h5 class="fw-bold mb-0" style="color:var(--text-primary);">${sme.name}</h5>
+                <span class="category-tag mt-1">${sme.category}</span>
               </div>
             </div>
-            <p class="text-secondary-emphasis small">${sme.description.substring(0,75)}…</p>
+            <p class="text-white-50 small">${sme.description.substring(0,75)}…</p>
             <div class="d-flex justify-content-between align-items-center mt-auto">
-              <span class="profile-chip"><i class="bi bi-geo-alt"></i> ${sme.location}</span>
-              <span class="profile-chip"><i class="bi bi-briefcase"></i> ${sme.leads} leads</span>
+              <span class="badge-glass"><i class="bi bi-geo-alt"></i> ${sme.location}</span>
+              <span class="badge-glass"><i class="bi bi-briefcase"></i> ${sme.leads} leads</span>
             </div>
-            <button class="btn btn-dark w-100 mt-3" onclick="openSME(${sme.id})">
+            <button class="btn btn-gradient-primary w-100 mt-3" onclick="openSME(${sme.id})">
               <i class="bi bi-person-lines-fill me-2"></i>View profile & connect
             </button>
           </div>
@@ -374,7 +552,6 @@
     });
   }
 
-  // open modal with SME details
   function openSME(id) {
     selectedSME = smes.find(s => s.id === id);
     document.getElementById("modalTitle").innerText = selectedSME.name;
@@ -382,14 +559,12 @@
     document.getElementById("modalLeads").innerText = selectedSME.leads;
     document.getElementById("modalDescription").innerText = selectedSME.description;
     document.getElementById("modalServices").innerText = selectedSME.services;
-    // clear previous fields
     document.getElementById("leadCompany").value = "";
     document.getElementById("leadEmail").value = "";
     document.getElementById("leadMessage").value = "";
     new bootstrap.Modal(document.getElementById("smeModal")).show();
   }
 
-  // submit lead (push & update)
   function submitLead() {
     const company = document.getElementById("leadCompany").value.trim();
     const email = document.getElementById("leadEmail").value.trim();
@@ -410,11 +585,10 @@
     selectedSME.leads++;
     alert("✓ Inquiry submitted! The SME will reach out soon.");
     bootstrap.Modal.getInstance(document.getElementById("smeModal")).hide();
-    renderDashboard();   // keep dashboard fresh
-    renderSMEs();        // update lead count on cards
+    renderDashboard();
+    renderSMEs();
   }
 
-  // toggle views
   function showMarketplace() {
     document.getElementById("marketplaceSection").classList.remove("d-none");
     document.getElementById("dashboardSection").classList.add("d-none");
@@ -426,7 +600,6 @@
     renderDashboard();
   }
 
-  // render dashboard KPIs and lead table
   function renderDashboard() {
     const totalSMEs = smes.length;
     const totalLeads = leads.length;
@@ -434,36 +607,45 @@
     document.getElementById("totalLeads").innerText = totalLeads;
 
     const top = smes.reduce((prev, current) => (prev.leads > current.leads) ? prev : current, smes[0]);
-    document.getElementById("topSME").innerHTML = `${top.name} <small style="font-size:0.7rem;">(${top.leads} leads)</small>`;
+    document.getElementById("topSME").innerHTML = `${top.name} <span style="font-size:0.8rem;">(${top.leads} leads)</span>`;
 
     const table = document.getElementById("leadTable");
     table.innerHTML = "";
-    leads.slice(0,8).forEach(l => {  // show latest 8 for readability
+    leads.slice(0,8).forEach(l => {
       table.innerHTML += `
         <tr>
-          <td><span class="fw-semibold">${l.sme}</span></td>
-          <td>${l.company}</td>
-          <td>${l.email}</td>
-          <td>${l.message.substring(0,45)}${l.message.length>45?'…':''}</td>
-          <td><span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill">new</span></td>
+          <td><span class="fw-semibold" style="color:var(--text-primary);">${l.sme}</span></td>
+          <td class="text-white-50">${l.company}</td>
+          <td class="text-white-50">${l.email}</td>
+          <td class="text-white-50">${l.message.substring(0,45)}${l.message.length>45?'…':''}</td>
+          <td><span class="badge bg-success bg-opacity-25 text-white px-3 py-1 rounded-pill border border-light">new</span></td>
         </tr>
       `;
     });
   }
 
-  // initial render
-  renderSMEs();
-  // also set the table on first dashboard view (hidden now, but ok)
-  window.renderDashboard = renderDashboard;
-  window.showMarketplace = showMarketplace;
-  window.showDashboard = showDashboard;
+  // initial render & set default theme icon
+  window.onload = function() {
+    renderSMEs();
+    // ensure icons match default dark
+    document.getElementById('themeIconSun').style.display = 'none';
+    document.getElementById('themeIconMoon').style.display = 'inline-block';
+    document.getElementById('themeLabel').innerText = 'Dark';
+  };
+
+  // expose functions
+  window.toggleTheme = toggleTheme;
+  window.renderSMEs = renderSMEs;
   window.openSME = openSME;
   window.submitLead = submitLead;
-  window.renderSMEs = renderSMEs;
+  window.showMarketplace = showMarketplace;
+  window.showDashboard = showDashboard;
+  window.renderDashboard = renderDashboard;
 </script>
-<!-- footer (subtle) -->
-<div class="container text-center text-muted small mt-5 pt-2">
-  <i class="bi bi-dell"></i> Dell ESD ICT SME Marketplace – MVP with enhanced mock data & modern UI
+
+<!-- footer -->
+<div class="container text-center text-white-50 small mt-5 pt-2">
+  <i class="bi bi-droplet"></i> Dell ESD ICT SME Marketplace – toggle between dark & light
 </div>
 </body>
 </html>
